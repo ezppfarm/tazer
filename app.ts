@@ -36,6 +36,7 @@ for await (
         newRoute.path,
         newRoute.handle,
       );
+      console.log(`registered path ${requestType}@${newRoute.path}`);
     }
   }
 }
