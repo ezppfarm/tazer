@@ -1,14 +1,11 @@
-import {
-  RouteReply,
-  RouteRequest,
-} from "https://deno.land/x/rapid@v0.2.2/mod.ts";
-import { RequestType } from "./requestType.ts";
+import { FastifyReply, FastifyRequest } from "fastify";
+import { RequestType } from "./requestType";
 
 export default interface routeHandler {
   path: string;
   requestTypes: RequestType[];
   handle(
-    request: RouteRequest,
-    response: RouteReply,
+    request: FastifyRequest,
+    response: FastifyReply,
   ): Promise<unknown> | unknown;
 }

@@ -1,82 +1,84 @@
-import {
-  HTTPMethod,
-  HTTPServer,
-} from "https://deno.land/x/rapid@v0.3.0/mod.ts";
-import * as path from "https://deno.land/std@0.201.0/path/mod.ts";
+import { RequestType } from "./route/requestType";
+import * as glob from "./glob";
+import Database from "./usecases/database";
+import { moment, prettytime } from "./utils/timeUtils";
+import fastify, { HTTPMethods } from "fastify";
+import { getAllFiles } from "@a73/get-all-files-ts";
+import routeHandler from "./route/routeHandler";
+import path from "path";
+import * as fs from "fs";
 
-import { recursiveReaddir } from "./utils/fileUtil.ts";
-import { RequestType } from "./route/requestType.ts";
-import * as glob from "./glob.ts";
-import Database from "./usecases/database.ts";
+const server = fastify();
 
-const server = new HTTPServer(false);
-
-console.log("Connecting to database...");
-
-await glob.database(
-  new Database({
-    endpoint: glob.getEnv("SURREAL_HOST", "http://127.0.0.1:8000/rpc"),
-    username: glob.getEnv("SURREAL_USER", ""),
-    password: glob.getEnv("SURREAL_PASS", ""),
-    database: glob.getEnv("SURREAL_DB", "tazer"),
-  }),
-);
-
-for await (
-  const route of recursiveReaddir(
-    path.join(Deno.cwd(), "route", "impl"),
-  )
-) {
-  const routeObj = await import(`./${route}`);
-  const newRoute = new routeObj.default();
-  for (const requestType in RequestType) {
-    if (newRoute.requestTypes.includes(requestType)) {
-      server.add(
-        requestType as HTTPMethod,
-        newRoute.path,
-        newRoute.handle,
-      );
-      console.log(`registered path ${requestType}@${newRoute.path}`);
-    }
+(async () => {
+  const missingKeys = glob.loadEnv();
+  if (missingKeys.length > 0) {
+    console.log(
+      `Missing ${missingKeys.length <= 1 ? `EnvKey` : `EnvKeys`}: ${
+        missingKeys.join(", ")
+      }`,
+    );
+    return;
   }
-}
+  console.log("Connecting to database...");
 
-const listenType = glob.getEnv("LISTEN_TYPE", "TCP").toUpperCase();
+  /* await glob.database(
+    new Database({
+      endpoint: glob.getEnv("SURREAL_HOST", "http://127.0.0.1:8000/rpc"),
+      username: glob.getEnv("SURREAL_USER", ""),
+      password: glob.getEnv("SURREAL_PASS", ""),
+      database: glob.getEnv("SURREAL_DB", "tazer"),
+    }),
+  ); */
 
-if (listenType != "UNIX" && listenType != "TCP") {
-  console.log(`unsupported listen type "${listenType}"`);
-  Deno.exit(0);
-}
+  const routes: routeHandler[] = [];
 
-if (listenType == "UNIX" && Deno.build.os == "windows") {
-  console.log("UNIX listen type is not supported on Windows!");
-  Deno.exit(0);
-}
-try {
-  const host = glob.getEnv("HTTP_HOST", "localhost");
-  const port = parseInt(glob.getEnv("HTTP_PORT", "8041"));
-  const unixPath = glob.getEnv("UNIX_LISTEN_PATH", "/temp/tazer.sock");
-
-  server.listen({
-    unixPath: listenType == "UNIX" ? unixPath : undefined,
-    port,
-    host,
+  const routesDir = path.join(__dirname, "route", "impl");
+  const files = await getAllFiles(routesDir).toArray();
+  files.forEach((file) => {
+    if (file && file.endsWith(".ts")) {
+      const route = require(file as string);
+      const newRoute = new route.default();
+      routes.push(newRoute);
+    }
   });
-  console.log(
-    `http server is listening on ${
-      listenType == "UNIX"
-        ? `unix:${unixPath}`
-        : `http://${host.length > 0 ? host : "localhost"}:${port}`
-    }`,
-  );
-} catch (err) {
-  console.log(err);
-  Deno.exit(0);
-}
 
-Deno.addSignalListener("SIGINT", () => {
-  console.log("stopping http server...");
-  server.close();
-  console.log("shutting down...");
-  Deno.exit(0);
-});
+  for (const requestType in RequestType) {
+    routes.forEach((route: routeHandler) => {
+      if (route.requestTypes.includes(requestType as RequestType)) {
+        server.route({
+          method: requestType as HTTPMethods,
+          url: route.path,
+          handler: route.handle,
+        });
+        console.log(
+          `Registering ${requestType} request route to ${route.path}`,
+        );
+      }
+    });
+  }
+
+  const unixPathEnv = glob.getEnv("UNIX_LISTEN");
+  if (unixPathEnv && unixPathEnv.length > 0) {
+    if (fs.existsSync(unixPathEnv)) await fs.promises.unlink(unixPathEnv);
+  }
+
+  const host = glob.getEnv("HTTP_HOST", "localhost");
+  const port = parseInt(glob.getEnv("HTTP_PORT", "8041") as string);
+
+  try {
+    console.log(`Trying to listen on ${host}:${port}...`);
+    if (unixPathEnv && process.platform != "win32") {
+      server.listen({ path: unixPathEnv });
+    } else {
+      await server.listen({ host, port });
+    }
+    console.log(
+      `listening on ${host}:${port}`,
+    );
+  } catch (err) {
+    console.log(`Error: ${err}`);
+    console.log(`Failed to bind to port ${port}!`);
+    process.exit(1);
+  }
+})();

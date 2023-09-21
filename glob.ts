@@ -1,17 +1,23 @@
-import Database from "./usecases/database.ts";
-import * as path from "https://deno.land/std@0.201.0/path/mod.ts";
-import { load } from "https://deno.land/x/tiny_env@1.0.0/mod.ts";
-import { fileExists } from "./utils/fileUtil.ts";
-if (await fileExists(path.join(Deno.cwd(), ".env"))) {
-  load();
-} else {
-  console.log(".env file not existing.");
-  Deno.exit(0);
-}
+import Database from "./usecases/database";
+import * as dotenv from "dotenv";
 
+const requiredEnvKeys = ["HTTP_PORT", "SURREAL_HOST", "SURREAL_DB"];
 let _database: Database;
 
-export const database = async (dbInit?: Database) => {
+export function loadEnv() {
+  const missingEnvKeys: string[] = [];
+  dotenv.config();
+  for (const envKey of requiredEnvKeys) {
+    if (!getEnv(envKey)) missingEnvKeys.push(envKey);
+  }
+  return missingEnvKeys;
+}
+
+export function getEnv(key: string, defaultValue?: string): string | undefined {
+  return process.env[key] ? process.env[key] as string : defaultValue;
+}
+
+export async function database(dbInit?: Database) {
   if (!_database) {
     if (!dbInit) {
       throw Error("Database is not initialized.");
@@ -22,10 +28,4 @@ export const database = async (dbInit?: Database) => {
     console.log("Database connection success!");
   }
   return _database;
-};
-
-export const getEnv = (key: string, defaultValue: string): string => {
-  return Deno.env.has(key)
-    ? (Deno.env.get(key) as string).trim()
-    : defaultValue.trim();
-};
+}

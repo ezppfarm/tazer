@@ -1,16 +1,13 @@
-import {
-  RouteReply,
-  RouteRequest,
-} from "https://deno.land/x/rapid@v0.2.2/mod.ts";
-import { RequestType } from "../requestType.ts";
-import routeHandler from "../routeHandler.ts";
+import { FastifyReply, FastifyRequest } from "fastify";
+import { RequestType } from "../requestType";
+import routeHandler from "../routeHandler";
 
 export default class BaseRoute implements routeHandler {
   path = "/";
   requestTypes = [RequestType.GET];
   handle(
-    _request: RouteRequest,
-    response: RouteReply,
+    _request: FastifyRequest,
+    response: FastifyReply,
   ): unknown {
     response.type("application/json");
 
