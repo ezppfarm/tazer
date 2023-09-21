@@ -2,7 +2,7 @@ import { RequestType } from "./route/requestType";
 import * as glob from "./glob";
 import Database from "./usecases/database";
 import { moment, prettytime } from "./utils/timeUtils";
-import fastify, { HTTPMethods } from "fastify";
+import fastify, { FastifyReply, FastifyRequest, HTTPMethods } from "fastify";
 import { getAllFiles } from "@a73/get-all-files-ts";
 import routeHandler from "./route/routeHandler";
 import path from "path";
@@ -22,14 +22,17 @@ const server = fastify();
   }
   console.log("Connecting to database...");
 
-  /* await glob.database(
+  await glob.database(
     new Database({
-      endpoint: glob.getEnv("SURREAL_HOST", "http://127.0.0.1:8000/rpc"),
-      username: glob.getEnv("SURREAL_USER", ""),
-      password: glob.getEnv("SURREAL_PASS", ""),
-      database: glob.getEnv("SURREAL_DB", "tazer"),
+      endpoint: glob.getEnv(
+        "SURREAL_HOST",
+        "http://127.0.0.1:8000/rpc",
+      ) as string,
+      username: glob.getEnv("SURREAL_USER", "") as string,
+      password: glob.getEnv("SURREAL_PASS", "") as string,
+      database: glob.getEnv("SURREAL_DB", "tazer") as string,
     }),
-  ); */
+  );
 
   const routes: routeHandler[] = [];
 
@@ -57,6 +60,24 @@ const server = fastify();
       }
     });
   }
+
+  server.addHook("preHandler", function (
+    request: FastifyRequest,
+    _reply: FastifyReply,
+    done,
+  ) {
+    const start = performance.now();
+    done();
+    const processTime = prettytime(performance.now() - start);
+    const ip = "cf-connecting-ip" in request.headers
+      ? request.headers["cf-connecting-ip"]
+      : request.ip;
+    console.log(
+      `[${
+        moment().format("YYYY-MM-DD HH-mm-ss")
+      }] ${ip} - ${request.method}@${request.raw.url} | ${processTime}`,
+    );
+  });
 
   const unixPathEnv = glob.getEnv("UNIX_LISTEN");
   if (unixPathEnv && unixPathEnv.length > 0) {

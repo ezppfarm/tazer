@@ -1,10 +1,15 @@
 {
   "compilerOptions": {
-    "strict": true,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "sourceMap": false,
+    "outDir": "dist",
     "esModuleInterop": true,
-    "lib": [
-      "ESNext",
-      "DOM"
-    ]
-  }
+    "resolveJsonModule": true
+  },
+  "include": [
+    "./package.json",
+    "*.ts",
+    ".sample.env"
+  ]
 }

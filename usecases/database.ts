@@ -21,18 +21,21 @@ export default class Database {
 
   async connect(): Promise<boolean> {
     try {
-      await this._db.connect(this._endpoint);
-      const signin = await this._db.signin({
-        user: this._username,
-        pass: this._password,
-      });
-      //TODO: check invalid credentials
-      // console.log(signin);
+      await this._db.connect(this._endpoint); //TODO: throws ReferenceError: ErrorEvent is not defined if SurrealDB Server is not running.
+      console.log(this._username.trim().length);
+      if (this._username.trim().length > 0) {
+        await this._db.signin({
+          user: this._username,
+          pass: this._password,
+        });
+      }
       await this._db.use({
         db: this._database,
+        ns: this._database,
       });
       return true;
     } catch (_err) {
+      console.log(_err);
       return false;
     }
   }
