@@ -5,26 +5,31 @@ export default class Database {
   #endpoint: string;
   #username: string;
   #password: string;
+  #database: string;
 
   constructor(opts: {
     endpoint: string;
     username: string;
     password: string;
+    database: string;
   }) {
     this.#endpoint = opts.endpoint;
     this.#username = opts.username;
     this.#password = opts.password;
+    this.#database = opts.database;
   }
 
   async connect() {
     try {
       await this.#db.connect(this.#endpoint);
-      await this.#db.signin({
+      const signin = await this.#db.signin({
         user: this.#username,
         pass: this.#password,
       });
+      //TODO: check invalid credentials
+      // console.log(signin);
       await this.#db.use({
-        db: "tazer",
+        db: this.#database,
       });
       return true;
     } catch (_err) {

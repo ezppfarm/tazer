@@ -1,6 +1,5 @@
 import * as path from "https://deno.land/std@0.201.0/path/mod.ts";
 
-
 export async function* recursiveReaddir(
     filepath: string
 ): AsyncGenerator<string, void> {
@@ -12,3 +11,16 @@ export async function* recursiveReaddir(
         }
     }
 }
+
+export const fileExists = async (filename: string): Promise<boolean> => {
+    try {
+      await Deno.stat(filename);
+      return true;
+    } catch (error) {
+      if (error instanceof Deno.errors.NotFound) {
+        return false;
+      } else {
+        throw error;
+      }
+    }
+  };
