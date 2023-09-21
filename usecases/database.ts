@@ -22,7 +22,6 @@ export default class Database {
   async connect(): Promise<boolean> {
     try {
       await this._db.connect(this._endpoint); //TODO: throws ReferenceError: ErrorEvent is not defined if SurrealDB Server is not running.
-      console.log(this._username.trim().length);
       if (this._username.trim().length > 0) {
         await this._db.signin({
           user: this._username,
