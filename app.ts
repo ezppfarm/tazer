@@ -26,10 +26,10 @@ const server = fastify();
     new Database({
       endpoint: glob.getEnv(
         "SURREAL_HOST",
-        "http://127.0.0.1:8000/rpc",
+        "ws://127.0.0.1:8000",
       ) as string,
-      username: glob.getEnv("SURREAL_USER", "") as string,
-      password: glob.getEnv("SURREAL_PASS", "") as string,
+      /* username: glob.getEnv("SURREAL_USER", "") as string,
+      password: glob.getEnv("SURREAL_PASS", "") as string, */
       database: glob.getEnv("SURREAL_DB", "tazer") as string,
     }),
   );
