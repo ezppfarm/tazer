@@ -2,6 +2,8 @@ import _moment from "moment";
 
 export const moment = _moment;
 
+export const currentTimeString = () => moment().format("YYYY-MM-DD HH-mm-ss");
+
 const map: Record<string, number> = {
   year: 31536000000,
   month: 2592000000,

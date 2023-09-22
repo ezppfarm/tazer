@@ -1,7 +1,7 @@
 import { RequestType } from "./route/requestType";
 import * as glob from "./glob";
 import Database from "./usecases/database";
-import { moment, prettytime } from "./utils/timeUtils";
+import { currentTimeString, prettytime } from "./utils/timeUtils";
 import fastify, { FastifyReply, FastifyRequest, HTTPMethods } from "fastify";
 import { getAllFiles } from "@a73/get-all-files-ts";
 import routeHandler from "./route/routeHandler";
@@ -73,9 +73,7 @@ const server = fastify();
       ? request.headers["cf-connecting-ip"]
       : request.ip;
     console.log(
-      `[${
-        moment().format("YYYY-MM-DD HH-mm-ss")
-      }] ${ip} - ${request.method}@${request.raw.url} | ${processTime}`,
+      `[${currentTimeString()}] ${ip} - ${request.method}@${request.raw.url} | ${processTime}`,
     );
   });
 
