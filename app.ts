@@ -24,13 +24,14 @@ const server = fastify();
 
   await glob.database(
     new Database({
-      endpoint: glob.getEnv(
-        "SURREAL_HOST",
-        "ws://127.0.0.1:8000",
+      host: glob.getEnv(
+        "MYSQL_HOST",
+        "127.0.0.1",
       ) as string,
-      /* username: glob.getEnv("SURREAL_USER", "") as string,
-      password: glob.getEnv("SURREAL_PASS", "") as string, */
-      database: glob.getEnv("SURREAL_DB", "tazer") as string,
+      port: parseInt(glob.getEnv("MYSQL_PORT", "3306") as string),
+      username: glob.getEnv("MYSQL_USER", "") as string,
+      password: glob.getEnv("MYSQL_PASS", "") as string,
+      database: glob.getEnv("MYSQL_DB", "tazer") as string,
     }),
   );
 

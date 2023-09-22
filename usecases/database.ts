@@ -1,56 +1,51 @@
-import { Surreal } from "surrealdb.node";
+import { Knex, knex } from "knex";
 
 export default class Database {
-  _db: Surreal = new Surreal();
-  _endpoint: string;
-/*   _username: string;
-  _password: string; */
+  _db: Knex;
+  _host: string;
+  _port: number;
+  _username: string;
+  _password: string;
   _database: string;
 
   constructor(opts: {
-    endpoint: string;
-/*     username: string;
-    password: string; */
+    host: string;
+    port: number;
+    username: string;
+    password: string;
     database: string;
   }) {
-    this._endpoint = opts.endpoint;
-/*     this._username = opts.username;
-    this._password = opts.password; */
+    this._host = opts.host;
+    this._port = opts.port;
+    this._username = opts.username;
+    this._password = opts.password;
     this._database = opts.database;
   }
 
   async connect(): Promise<boolean> {
     try {
-      await this._db.connect(this._endpoint); //TODO: throws ReferenceError: ErrorEvent is not defined if SurrealDB Server is not running.
-      /*       if (this._username.trim().length > 0) {
-        const login = await this._db.signin({
+      this._db = knex({
+        client: "mysql2",
+        connection: {
+          host: this._host,
+          port: this._port,
           user: this._username,
-          pass: this._password,
-        });
-        console.log(login);
-      } */
-/*       await this._db.signin({
-        namespace: this._database,
-        database: this._database,
-        username: this._username,
-        password: this._password,
-      }); */
-      await this._db.use({
-        db: this._database,
-        ns: this._database,
+          password: this._password,
+          database: this._database,
+        },
       });
+      await this._db.raw("SELECT 1");
       return true;
-    } catch (_err) {
-      console.log(_err);
+    } catch (err) {
       return false;
     }
   }
 
   async disconnect(): Promise<void> {
-    await this._db.invalidate();
+    await this._db.destroy();
   }
 
-  get(): Surreal {
+  get(): Knex {
     return this._db;
   }
 }
