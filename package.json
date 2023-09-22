@@ -1,6 +1,6 @@
 {
   "name": "tazer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "a osu!lazer bancho imlementation made in typescript",
   "main": "index.js",
   "scripts": {
