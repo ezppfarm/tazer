@@ -4,7 +4,8 @@
   "description": "a osu!lazer bancho imlementation made in typescript",
   "main": "index.js",
   "scripts": {
-    "debug": "tsx app.ts"
+    "debug": "tsx app.ts",
+    "depcheck": "depcheck ."
   },
   "keywords": [],
   "author": "",
