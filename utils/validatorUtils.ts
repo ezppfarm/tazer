@@ -27,3 +27,10 @@ export const passwordValidator = z.string({
       "Password must contain at least one uppercase letter, one number, and one symbol",
   },
 );
+
+export const emailValidator = z.string({
+  required_error: "Email is required",
+  invalid_type_error: "Email must be a string",
+}).email({
+  message: "The provided email is not a valid"
+})

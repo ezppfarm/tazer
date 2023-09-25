@@ -7,19 +7,20 @@ import { getAllFiles } from "@a73/get-all-files-ts";
 import routeHandler from "./route/routeHandler";
 import path from "path";
 import * as fs from "fs";
+import fastifyMultipart from "@fastify/multipart";
 
 const server = fastify();
 
 (async () => {
+  server.register(fastifyMultipart, { attachFieldsToBody: true });
   const missingKeys = glob.loadEnv();
-  if(!missingKeys){
+  if (!missingKeys) {
     console.log(".env not found, please create one!")
     return;
   }
   if (missingKeys.length > 0) {
     console.log(
-      `Missing ${missingKeys.length <= 1 ? `EnvKey` : `EnvKeys`}: ${
-        missingKeys.join(", ")
+      `Missing ${missingKeys.length <= 1 ? `EnvKey` : `EnvKeys`}: ${missingKeys.join(", ")
       }`,
     );
     return;
@@ -82,6 +83,20 @@ const server = fastify();
     );
   });
 
+  server.setErrorHandler(function (error, request, reply) {
+    if (error instanceof fastify.errorCodes.FST_ERR_BAD_STATUS_CODE) {
+      // Log error
+      this.log.error(error)
+      console.log(error);
+      // Send error response
+      reply.status(500).send({ ok: false })
+    } else {
+      // fastify will use parent error handler to handle this
+      reply.send(error)
+      console.log(error);
+    }
+  })
+
   const unixPathEnv = glob.getEnv("UNIX_LISTEN");
   if (unixPathEnv && unixPathEnv.length > 0) {
     if (fs.existsSync(unixPathEnv)) await fs.promises.unlink(unixPathEnv);
@@ -91,15 +106,18 @@ const server = fastify();
   const port = parseInt(glob.getEnv("HTTP_PORT", "8041") as string);
 
   try {
-    console.log(`Trying to listen on ${host}:${port}...`);
+
     if (unixPathEnv && process.platform != "win32") {
+      console.log("trying to use Unix path " + unixPathEnv);
       server.listen({ path: unixPathEnv });
+      console.log("Using Unix path " + unixPathEnv);
     } else {
+      console.log(`Trying to listen on ${host}:${port}...`);
       await server.listen({ host, port });
+      console.log(
+        `listening on ${host}:${port}`,
+      );
     }
-    console.log(
-      `listening on ${host}:${port}`,
-    );
   } catch (err) {
     console.log(`Error: ${err}`);
     console.log(`Failed to bind to port ${port}!`);

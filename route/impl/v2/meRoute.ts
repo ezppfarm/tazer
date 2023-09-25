@@ -10,8 +10,8 @@ export default class meRoute implements routeHandler {
     response: FastifyReply,
   ): unknown {
     response.type("application/json");
-
     const authorization_token = request.headers.authorization?.split(" ")[1];
+    
   
     return {};
   }

@@ -5,6 +5,8 @@ import { toSafeUsername } from "../../utils/userUtils";
 import { refresh_tokens, sessions } from "../../consts/cache";
 import { Session } from "../../objects/session";
 import { generateBearerToken } from "../../utils/stringUtils";
+import { UserLoginStruct } from "../../types/UserLoginStruct";
+import * as responseUtils from '../../utils/responseUtils';
 
 export default class oAuthRoute implements routeHandler {
   path = "/oauth/token";
@@ -15,28 +17,13 @@ export default class oAuthRoute implements routeHandler {
   ): unknown {
     response.type("application/json");
 
-    const error = (err: string) => {
-      response.code(400);
-      return {
-        "error": "invalid_grant",
-        "error_description":
-          "The provided authorization grant (e.g., authorization code, resource owner credentials) or refresh token is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client.",
-        "hint": err,
-        "message":
-          "The provided authorization grant (e.g., authorization code, resource owner credentials) or refresh token is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client.",
-      };
-    };
+    const loginRequest = request.body as UserLoginStruct;
 
-    const success = (obj: unknown) => {
-      response.code(200);
-      return obj;
-    };
+    console.log(loginRequest);
 
-    const body = request.body as Record<string, string>;
-
-    const username = body.username;
-    const password = body.password;
-    const refresh_token = body.refresh_token;
+    const username = loginRequest.username?.value;
+    const password = loginRequest.password?.value;
+    const refresh_token = loginRequest.refresh_token?.value;
 
     if (refresh_token) {
       const session = refresh_tokens.get<Session>(refresh_token);
@@ -45,13 +32,13 @@ export default class oAuthRoute implements routeHandler {
         session.access_token = generateBearerToken();
         sessions.set(session.access_token, session, 86400);
         return session;
-      } else return error("Invalid refresh token");
+      } else return responseUtils.grant_error(response, "Invalid refresh token");
     }
 
     if (
       !username || !password || username.length <= 0 || password.length <= 0
     ) {
-      return error("Invalid username and/or password");
+      return responseUtils.grant_error(response, "Invalid username and/or password");
     }
     const username_safe = toSafeUsername(username || "");
     //TODO: authenticate user
@@ -66,6 +53,6 @@ export default class oAuthRoute implements routeHandler {
     };
     sessions.set(session.access_token, session, 86400);
     refresh_tokens.set(session.refresh_token, session);
-    return success(session);
+    return responseUtils.success(response, session);
   }
 }

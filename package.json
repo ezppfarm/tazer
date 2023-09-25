@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "@a73/get-all-files-ts": "^1.0.1",
+    "@fastify/multipart": "^7.7.3",
     "@types/bcryptjs": "^2.4.4",
     "@types/node": "^20.6.3",
     "bcryptjs": "^2.4.3",
