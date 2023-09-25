@@ -1,10 +1,14 @@
 import Database from "./usecases/database";
 import * as dotenv from "dotenv";
+import * as fs from "fs";
+import * as path from "path";
 
-const requiredEnvKeys = ["HTTP_PORT", "SURREAL_HOST", "SURREAL_DB"];
+const requiredEnvKeys = ["HTTP_PORT", "MYSQL_HOST", "MYSQL_DB"];
 let _database: Database;
 
 export function loadEnv() {
+  const envFile = path.join(process.cwd(), ".env");
+  if (!fs.existsSync(envFile)) return undefined;
   const missingEnvKeys: string[] = [];
   dotenv.config();
   for (const envKey of requiredEnvKeys) {

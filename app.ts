@@ -12,6 +12,10 @@ const server = fastify();
 
 (async () => {
   const missingKeys = glob.loadEnv();
+  if(!missingKeys){
+    console.log(".env not found, please create one!")
+    return;
+  }
   if (missingKeys.length > 0) {
     console.log(
       `Missing ${missingKeys.length <= 1 ? `EnvKey` : `EnvKeys`}: ${
