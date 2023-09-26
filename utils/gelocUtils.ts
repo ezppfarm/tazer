@@ -7,10 +7,10 @@ export let ip2locationV6DB: IP2Location;
 
 export const loadIP2LocationDB = async () => {
   ip2locationDB = new IP2Location();
-  ip2locationDB.open(path.join(process.cwd(), "ext", "IP2LOCATION-LITE-DB3.BIN"));
+  ip2locationDB.open(path.join(process.cwd(), "ext", "IP2LOCATION-LITE-DB1.BIN"));
 
   ip2locationV6DB = new IP2Location();
-  ip2locationV6DB.open(path.join(process.cwd(), "ext", "IP2LOCATION-LITE-DB3.IPV6.BIN"));
+  ip2locationV6DB.open(path.join(process.cwd(), "ext", "IP2LOCATION-LITE-DB1.IPV6.BIN"));
 }
 
 export const getCountryCode = async (ip: string) => {
@@ -18,6 +18,7 @@ export const getCountryCode = async (ip: string) => {
     const ipResult = await z.string().ip().parseAsync(ip)
     return ipResult.includes(":") ? await ip2locationV6DB.getCountryShortAsync(ipResult) : await ip2locationDB.getCountryShortAsync(ipResult);
   } catch (err) {
+    console.log(err);
     return "XX";
   }
 }

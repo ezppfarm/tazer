@@ -5,7 +5,7 @@ import { getCountryCode, loadIP2LocationDB } from "../utils/gelocUtils";
 (async () => {
   await loadIP2LocationDB();
   test("geloc country code testing valid ipv4", async (t) => {
-    const countryCode = await getCountryCode("178.4.120.222");
+    const countryCode = await getCountryCode("217.92.217.67");
     console.log(countryCode);
   });
 
