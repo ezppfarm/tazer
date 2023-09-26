@@ -51,6 +51,6 @@ export class User {
   constructor(dbResult: DBUser) {
     this.id = dbResult.id;
     this.username = dbResult.name;
-    this.country_code = dbResult.country
+    this.country_code = dbResult.country;
   }
 }
