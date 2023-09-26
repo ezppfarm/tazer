@@ -8,6 +8,7 @@ import routeHandler from "./route/routeHandler";
 import path from "path";
 import * as fs from "fs";
 import fastifyMultipart from "@fastify/multipart";
+import { loadIP2LocationDB } from './utils/gelocUtils';
 
 const server = fastify();
 
@@ -25,6 +26,9 @@ const server = fastify();
     );
     return;
   }
+
+  await loadIP2LocationDB();
+
   console.log("Connecting to database...");
 
   await glob.database(
