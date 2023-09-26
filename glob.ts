@@ -33,3 +33,7 @@ export async function database(dbInit?: Database) {
   }
   return _database.get();
 }
+
+export const getDataFolder = (dataFolder: "avatars") => {
+  return path.join(process.cwd(), ".data", dataFolder);
+}
