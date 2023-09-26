@@ -24,7 +24,6 @@ export default class meRoute implements routeHandler {
     const user = await getUser(session.id);
 
     if (!user) return {};
-
-    return user; //TODO: correct output
+    return user;
   }
 }
