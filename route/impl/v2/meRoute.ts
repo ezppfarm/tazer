@@ -8,10 +8,10 @@ import { getUser } from "../../../repositories/user";
 export default class meRoute implements routeHandler {
   path = "/api/v2/me/";
   requestTypes = [RequestType.GET];
-  handle(
+  async handle(
     request: FastifyRequest,
     response: FastifyReply,
-  ): unknown {
+  ): Promise<unknown> {
     response.type("application/json");
     const authorization_token = request.headers.authorization?.split(" ")[1];
 
@@ -21,10 +21,10 @@ export default class meRoute implements routeHandler {
 
     if (!session) return {};
 
-    const user = getUser(session.id);
+    const user = await getUser(session.id);
 
     if (!user) return {};
 
-    return user;
+    return user; //TODO: correct output
   }
 }

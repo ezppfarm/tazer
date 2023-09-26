@@ -1,8 +1,9 @@
 import { DBUser } from "../types/DBUser";
+import { getCountryNameFromCode } from "../utils/countryUtils";
 
 export class User {
-
   avatar_url: string;
+  country: string;
   country_code: string;
   default_group = "default";
   id: number;
@@ -13,6 +14,9 @@ export class User {
   is_online = true;
   is_bot = false;
   is_deleted = false;
+  is_supporter = false;
+  last_visit: string;
+  join_date: string;
   cover_url = "https://osu.ppy.sh/images/headers/profile-covers/c5.jpg"
   discord = null;
   has_supported = false;
@@ -50,7 +54,11 @@ export class User {
   is_silenced = false;
   constructor(dbResult: DBUser) {
     this.id = dbResult.id;
+    this.avatar_url = `https://avatar.ez-pp.farm/${this.id}`;
     this.username = dbResult.name;
     this.country_code = dbResult.country;
+    this.country = getCountryNameFromCode(this.country_code);
+    this.last_visit = dbResult.last_activity.toISOString();
+    this.join_date = dbResult.join_time.toISOString();
   }
 }
