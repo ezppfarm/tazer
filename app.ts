@@ -2,7 +2,7 @@ import { RequestType } from "./route/requestType";
 import * as glob from "./glob";
 import Database from "./usecases/database";
 import { currentTimeString, prettytime } from "./utils/timeUtils";
-import fastify, { FastifyReply, FastifyRequest, HTTPMethods } from "fastify";
+import fastify, { FastifyError, FastifyReply, FastifyRequest, HTTPMethods } from "fastify";
 import { getAllFiles } from "@a73/get-all-files-ts";
 import routeHandler from "./route/routeHandler";
 import path from "path";
@@ -56,6 +56,20 @@ const server = fastify();
     }
   });
 
+
+  server.setErrorHandler((err: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
+    return reply.code(err.statusCode ?? 400).send({
+      code: err.statusCode,
+      message: err.message
+    })
+  });
+
+  server.setNotFoundHandler((request: FastifyRequest, reply: FastifyReply) => {
+    return reply.code(404).send({
+      code: 404,
+      message: "Not Found"
+    })
+  });
 
   const domain = glob.getEnv("DOMAIN");
 

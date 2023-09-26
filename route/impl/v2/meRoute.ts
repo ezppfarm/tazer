@@ -15,7 +15,9 @@ export default class meRoute implements routeHandler {
     response.type("application/json");
     const authorization_token = request.headers.authorization?.split(" ")[1];
 
-    if (!authorization_token) return {};
+    if (!authorization_token) return {
+      Authorization: "Basic"
+    };
 
     const session = sessions.get<Session>(authorization_token);
 
