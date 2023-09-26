@@ -56,6 +56,9 @@ const server = fastify();
     }
   });
 
+
+  const domain = glob.getEnv("DOMAIN");
+
   for (const requestType in RequestType) {
     routes.forEach((route: routeHandler) => {
       if (route.requestTypes.includes(requestType as RequestType)) {
@@ -63,9 +66,10 @@ const server = fastify();
           method: requestType as HTTPMethods,
           url: route.path,
           handler: route.handle,
+          constraints: { host: route.constraints ?? domain }
         });
         console.log(
-          `Registering ${requestType} request route to ${route.path}`,
+          `Registering ${requestType} request route to ${route.constraints ?? domain}${route.path}`,
         );
       }
     });
