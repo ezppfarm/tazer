@@ -2,12 +2,11 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { RequestType } from "../requestType";
 import routeHandler from "../routeHandler";
 import { toSafeUsername } from "../../utils/userUtils";
-import { refresh_tokens, sessions } from "../../consts/cache";
-import { Session } from "../../objects/session";
-import { generateBearerToken } from "../../utils/stringUtils";
 import { UserRegisterStruct } from "../../types/UserRegisterStruct";
 import { emailValidator, passwordValidator, usernameValidator } from "../../utils/validatorUtils";
 import { ZodError } from "zod";
+import { insertUser } from "../../repositories/user";
+import { getRequestIP } from "../../utils/requestUtils";
 
 export default class oAuthRoute implements routeHandler {
   path = "/users";
@@ -56,8 +55,36 @@ export default class oAuthRoute implements routeHandler {
       })
     };
 
-    console.log("registering " + username)
+    const safeUsername = toSafeUsername(username);
 
+    // So far all checks passed, register the user in the database
+    console.log("registering", username);
+    const registerResult = await insertUser(username, safeUsername, password, email, getRequestIP(request));
+
+    if (!registerResult) {
+      let form_error: Record<string, unknown> = {};
+      form_error["username"] = "Something went wrong while registering.";
+      form_error["email"] = "Something went wrong while registering.";
+      response.code(400);
+      return JSON.stringify({
+        form_error: {
+          user: form_error
+        }
+      })
+    };
+
+    if (registerResult.type == "error") {
+      let form_error: Record<string, unknown> = {};
+      console.log("error while registering", registerResult);
+      form_error["username"] = registerResult.message;
+      form_error["email"] = registerResult.message;
+      response.code(400);
+      return JSON.stringify({
+        form_error: {
+          user: form_error
+        }
+      })
+    }
 
     return {};
   }

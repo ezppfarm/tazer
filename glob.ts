@@ -31,5 +31,5 @@ export async function database(dbInit?: Database) {
     if (!connected) throw Error("Failed to connect to database!");
     console.log("Database connection success!");
   }
-  return _database;
+  return _database.get();
 }
