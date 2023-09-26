@@ -5,6 +5,6 @@ export type DBUser = {
   email: string;
   password: string;
   country: string;
-  join_date: Date;
+  join_time: Date;
   last_activity: Date;
 }
