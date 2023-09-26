@@ -17,8 +17,7 @@ export const getCountryCode = async (ip: string) => {
   try {
     const ipResult = await z.string().ip().parseAsync(ip)
     return ipResult.includes(":") ? await ip2locationV6DB.getCountryShortAsync(ipResult) : await ip2locationDB.getCountryShortAsync(ipResult);
-  } catch (err) {
-    console.log(err);
+  } catch (_err) {
     return "XX";
   }
 }
