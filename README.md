@@ -1,4 +1,4 @@
-# tazer [![NodeJS: >=18.0.0](https://img.shields.io/badge/NodeJS->=18.0.0-green.svg)](https://www.typescriptlang.org) [![Language: TypeScript](https://img.shields.io/badge/language-typescript-blue.svg)](https://www.typescriptlang.org) [![Code Style: Google](https://img.shields.io/badge/code%20style-gts-blueviolet.svg)](https://github.com/google/gts)
+# tazer [![NodeJS: >=18.0.0](https://img.shields.io/badge/NodeJS->=18.0.0-green.svg)](https://nodejs.org) [![Language: TypeScript](https://img.shields.io/badge/language-typescript-blue.svg)](https://www.typescriptlang.org) [![Code Style: Google](https://img.shields.io/badge/code%20style-gts-blueviolet.svg)](https://github.com/google/gts)
 
 tazer is a work-in-progress (WIP) implementation of the osu!lazer Bancho server in TypeScript. Please note that it is still in development and should not be used in a production environment. This repository is intended for developers and contributors who want to explore and contribute to the project.
 
