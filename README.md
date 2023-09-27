@@ -4,7 +4,7 @@ tazer is a work-in-progress (WIP) implementation of the osu!lazer Bancho server 
 
 ## What is osu!lazer Bancho?
 
-osu!lazer Bancho is the backend server responsible for handling multiplayer gameplay, user accounts, and other core functionality in the popular rhythm game osu!. This project aims to provide an open-source implementation of Bancho.
+osu!lazer Bancho is the backend server responsible for handling multiplayer gameplay, user scores, user accounts, and other core functionality in the popular rhythm game osu!. This project aims to provide an open-source implementation of Bancho.
 
 ## Getting Started
 
