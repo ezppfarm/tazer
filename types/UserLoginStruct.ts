@@ -28,7 +28,7 @@ export type UserLoginStruct = {
     fieldnameTruncated: boolean;
     valueTruncated: boolean;
     fields: unknown;
-  }
+  };
   refresh_token?: {
     type: string;
     fieldname: string;
@@ -38,5 +38,5 @@ export type UserLoginStruct = {
     fieldnameTruncated: boolean;
     valueTruncated: boolean;
     fields: unknown;
-  }
-}
+  };
+};

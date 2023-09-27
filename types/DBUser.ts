@@ -7,4 +7,4 @@ export type DBUser = {
   country: string;
   join_time: Date;
   last_activity: Date;
-}
+};

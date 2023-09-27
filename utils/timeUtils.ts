@@ -1,8 +1,8 @@
-import _moment from "moment";
+import _moment from 'moment';
 
 export const moment = _moment;
 
-export const currentTimeString = () => moment().format("YYYY-MM-DD HH-mm-ss");
+export const currentTimeString = () => moment().format('YYYY-MM-DD HH-mm-ss');
 
 const map: Record<string, number> = {
   year: 31536000000,
@@ -16,39 +16,43 @@ const map: Record<string, number> = {
 };
 
 const short: Record<string, string> = {
-  year: "y",
-  month: "mo",
-  day: "d",
-  hour: "h",
-  minute: "m",
-  second: "s",
-  ms: "ms",
-  µs: "µs",
+  year: 'y',
+  month: 'mo',
+  day: 'd',
+  hour: 'h',
+  minute: 'm',
+  second: 's',
+  ms: 'ms',
+  µs: 'µs',
 };
 
-export function prettytime(value: number, options?: {
-  short?: boolean;
-  decimals?: number;
-}) {
+export function prettytime(
+  value: number,
+  options?: {
+    short?: boolean;
+    decimals?: number;
+  }
+) {
   value = Math.abs(value);
 
-  let unit = "";
-  Object.keys(map).some(function (key) {
+  let unit = '';
+  Object.keys(map).some(key => {
     const unitValue = map[key];
     unit = key;
     if (value >= unitValue) {
       value = value / unitValue;
       return true;
     }
+    return false;
   });
 
   if (options && options.short) {
     unit = short[unit];
-  } else if (value > 1 && unit !== "ms" && unit !== "µs") {
-    unit += "s";
+  } else if (value > 1 && unit !== 'ms' && unit !== 'µs') {
+    unit += 's';
   }
 
   return [value.toFixed(options?.decimals || 0), unit].join(
-    options?.short ? "" : " ",
+    options?.short ? '' : ' '
   );
 }

@@ -1,5 +1,5 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import { RequestType } from "./requestType";
+import {FastifyReply, FastifyRequest} from 'fastify';
+import {RequestType} from './requestType';
 
 export default interface routeHandler {
   path: string;
@@ -7,6 +7,6 @@ export default interface routeHandler {
   constraints?: string;
   handle(
     request: FastifyRequest,
-    response: FastifyReply,
+    response: FastifyReply
   ): Promise<unknown> | unknown;
 }

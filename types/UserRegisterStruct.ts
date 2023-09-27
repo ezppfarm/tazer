@@ -1,5 +1,5 @@
 export type UserRegisterStruct = {
-  "user[username]": {
+  'user[username]': {
     type: string;
     fieldname: string;
     mimetype: string;
@@ -9,7 +9,7 @@ export type UserRegisterStruct = {
     valueTruncated: boolean;
     fields: unknown;
   };
-  "user[user_email]": {
+  'user[user_email]': {
     type: string;
     fieldname: string;
     mimetype: string;
@@ -19,7 +19,7 @@ export type UserRegisterStruct = {
     valueTruncated: boolean;
     fields: unknown;
   };
-  "user[password]": {
+  'user[password]': {
     type: string;
     fieldname: string;
     mimetype: string;
@@ -28,5 +28,5 @@ export type UserRegisterStruct = {
     fieldnameTruncated: boolean;
     valueTruncated: boolean;
     fields: unknown;
-  }
-}
+  };
+};

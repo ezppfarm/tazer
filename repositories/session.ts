@@ -1,4 +1,4 @@
-import NodeCache from "node-cache";
+import NodeCache from 'node-cache';
 
-export const sessions = new NodeCache();
-export const refresh_tokens = new NodeCache();
+export const SESSIONS = new NodeCache();
+export const REFRESH_TOKENS = new NodeCache();

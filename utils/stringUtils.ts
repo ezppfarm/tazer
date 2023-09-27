@@ -1,10 +1,10 @@
-import { randomBytes } from "crypto";
+import {randomBytes} from 'crypto';
 
 const characters =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.".split(""); // memes
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.'.split(''); // memes
 
 export const generateString = (length: number): string => {
-  let result = "";
+  let result = '';
 
   for (let i = 0; i < length; i++) {
     result += characters[randomBytes(1).readUInt8(0) % characters.length];

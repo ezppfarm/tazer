@@ -1,15 +1,13 @@
 {
+  "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
     "target": "ES2022",
     "module": "CommonJS",
     "sourceMap": false,
-    "outDir": "dist",
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "./package.json",
-    "*.ts",
-    ".sample.env"
-  ]
+  "include": ["./package.json", "*.ts", ".sample.env"]
 }
