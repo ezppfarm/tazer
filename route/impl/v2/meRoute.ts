@@ -1,7 +1,7 @@
 import {FastifyReply, FastifyRequest} from 'fastify';
 import {RequestType} from '../../requestType';
 import routeHandler from '../../routeHandler';
-import {sessions} from '../../../repositories/session';
+import {SESSIONS} from '../../../repositories/session';
 import {Session} from '../../../objects/session';
 import {getUser} from '../../../repositories/user';
 
@@ -20,7 +20,7 @@ export default class meRoute implements routeHandler {
         Authorization: 'Basic',
       };
 
-    const session = sessions.get<Session>(authorization_token);
+    const session = SESSIONS.get<Session>(authorization_token);
 
     if (!session) return {};
 
