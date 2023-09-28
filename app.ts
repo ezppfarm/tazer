@@ -103,18 +103,17 @@ const SERVER = fastify();
   }
 
   SERVER.addHook(
-    'preHandler',
-    (request: FastifyRequest, _reply: FastifyReply, done) => {
-      const start = performance.now();
-      done();
-      const processTime = prettytime(performance.now() - start);
+    'onResponse',
+    (request: FastifyRequest, reply: FastifyReply, done) => {
+      const processTime = prettytime(reply.getResponseTime());
       const ip =
         'cf-connecting-ip' in request.headers
           ? request.headers['cf-connecting-ip']
           : request.ip;
+      console.log(request.hostname);
       console.log(
         `[${currentTimeString()}] ${ip} - ${request.method}@${
-          request.raw.url
+          request.hostname + request.raw.url
         } | ${processTime}`
       );
     }
