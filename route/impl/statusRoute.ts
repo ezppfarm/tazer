@@ -2,7 +2,7 @@ import {FastifyReply, FastifyRequest} from 'fastify';
 import {RequestType} from '../requestType';
 import routeHandler from '../routeHandler';
 
-export default class BaseRoute implements routeHandler {
+export default class statusRoute implements routeHandler {
   path = '/';
   requestTypes = [RequestType.GET];
   handle(_request: FastifyRequest, response: FastifyReply): unknown {

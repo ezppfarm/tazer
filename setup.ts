@@ -1,4 +1,4 @@
-import {prompt} from 'enquirer';
+import enquirer from 'enquirer';
 import * as colors from 'ansi-colors';
 import {createSpinner} from 'nanospinner';
 import Database from './usecases/database';
@@ -17,7 +17,7 @@ export const run = async (): Promise<undefined | Record<string, string>> => {
     });
   };
 
-  const licensePrompt: Record<string, string> = await prompt({
+  const licensePrompt: Record<string, string> = await enquirer.prompt({
     prefix: colors.bold.red('⚠'),
     type: 'select',
     name: 'confirm',
@@ -46,7 +46,7 @@ export const run = async (): Promise<undefined | Record<string, string>> => {
   });
   if (licensePrompt.confirm === 'I do not accept') return undefined;
 
-  const firstPrompts: Record<string, string> = await prompt([
+  const firstPrompts: Record<string, string> = await enquirer.prompt([
     {
       type: 'text',
       message:
@@ -105,7 +105,7 @@ export const run = async (): Promise<undefined | Record<string, string>> => {
   const listenType = firstPrompts.LISTEN_TYPE;
 
   if (listenType === 'UNIX') {
-    const unixQuestions: Record<string, string> = await prompt([
+    const unixQuestions: Record<string, string> = await enquirer.prompt([
       {
         type: 'text',
         required: true,
@@ -122,7 +122,7 @@ export const run = async (): Promise<undefined | Record<string, string>> => {
     addOptions(unixQuestions);
   } else {
     let httpHost = '';
-    const tcpQuestions: Record<string, string> = await prompt([
+    const tcpQuestions: Record<string, string> = await enquirer.prompt([
       {
         type: 'text',
         required: true,
@@ -165,7 +165,7 @@ export const run = async (): Promise<undefined | Record<string, string>> => {
   let mysqlConnected = false;
 
   while (!mysqlConnected) {
-    const mysqlPrompts: Record<string, string> = await prompt([
+    const mysqlPrompts: Record<string, string> = await enquirer.prompt([
       {
         type: 'text',
         required: true,

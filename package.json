@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "a osu!lazer bancho implementation made in typescript",
   "main": "app.ts",
+  "type": "module",
   "scripts": {
     "debug": "tsx app.ts",
     "depcheck": "depcheck .",

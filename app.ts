@@ -79,16 +79,15 @@ const SERVER = fastify();
 
   const routes: routeHandler[] = [];
 
-  const routesDir = path.join(__dirname, 'route', 'impl');
+  const routesDir = path.join(process.cwd(), 'route', 'impl');
   const files = await getAllFiles(routesDir).toArray();
-  files.forEach(file => {
+  for (const file of files) {
     if (file && file.endsWith('.ts')) {
-      const route = require(file as string);
+      const route = await import(file as string);
       const newRoute = new route.default();
       routes.push(newRoute);
     }
-  });
-
+  }
   SERVER.setErrorHandler(
     (err: FastifyError, _request: FastifyRequest, reply: FastifyReply) => {
       return reply.code(err.statusCode ?? 400).send({
@@ -130,7 +129,7 @@ const SERVER = fastify();
   SERVER.addHook(
     'onResponse',
     (request: FastifyRequest, reply: FastifyReply) => {
-      const processTime = prettytime(reply.getResponseTime());
+      const processTime = prettytime(reply.getResponseTime(), {short: true});
       const ip =
         'cf-connecting-ip' in request.headers
           ? request.headers['cf-connecting-ip']
