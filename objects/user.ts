@@ -1,4 +1,5 @@
 import {DBUser} from '../types/DBUser';
+import * as glob from '../glob';
 import {getCountryNameFromCode} from '../utils/countryUtils';
 
 export class User {
@@ -255,7 +256,7 @@ export class User {
   constructor(dbResult: DBUser) {
     this.id = dbResult.id;
     this.username = dbResult.name;
-    this.avatar_url = `https://avatar.ez-pp.farm/${this.id}`;
+    this.avatar_url = `https://${glob.getDomain('avatar')}/${this.id}`;
     this.join_date = dbResult.join_time.toISOString();
     this.country_code = dbResult.country;
     this.country = {

@@ -8,7 +8,7 @@ import * as path from 'path';
 export default class BaseRoute implements routeHandler {
   path = '/:id';
   requestTypes = [RequestType.GET];
-  constraints = 'avatar.ez-pp.farm'; //TODO: make dynamic
+  constraints = 'avatar';
   async handle(
     request: FastifyRequest,
     response: FastifyReply

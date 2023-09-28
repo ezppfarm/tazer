@@ -2,6 +2,7 @@ import Database from './usecases/database';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as path from 'path';
+import {z} from 'zod';
 
 const requiredEnvKeys = ['HTTP_PORT', 'MYSQL_HOST', 'MYSQL_DB'];
 let _database: Database;
@@ -36,4 +37,12 @@ export async function database(dbInit?: Database) {
 
 export const getDataFolder = (dataFolder: 'avatars') => {
   return path.join(process.cwd(), '.data', dataFolder);
+};
+
+export const getDomain = (sub?: 'avatar' | 'api') => {
+  const domain = getEnv('DOMAIN');
+  if (!domain || z.string().url().parse(domain)) {
+    throw Error('DOMAIN in .env not set!');
+  }
+  return sub ? `${sub}.${domain}` : domain;
 };
