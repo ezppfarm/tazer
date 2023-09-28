@@ -13,12 +13,17 @@ import routeHandler from './route/routeHandler';
 import path from 'path';
 import * as fs from 'fs';
 import fastifyMultipart from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
 import {loadIP2LocationDB} from './utils/gelocUtils';
 
 const SERVER = fastify();
 
 (async () => {
   SERVER.register(fastifyMultipart, {attachFieldsToBody: true});
+  SERVER.register(fastifyStatic, {
+    root: path.join(process.cwd(), 'assets'),
+    prefix: '/assets/',
+  });
   const missingKeys = glob.loadEnv();
   if (!missingKeys) {
     console.log('.env not found, please create one!');
@@ -75,7 +80,7 @@ const SERVER = fastify();
     });
   });
 
-  const domain = glob.getEnv('DOMAIN');
+  const domain = glob.getDomain();
 
   for (const requestType in RequestType) {
     routes.forEach((route: routeHandler) => {
@@ -84,11 +89,11 @@ const SERVER = fastify();
           method: requestType as HTTPMethods,
           url: route.path,
           handler: route.handle,
-          constraints: {host: route.constraints ?? domain},
+          constraints: {host: `${route.constraints}.${domain}` ?? domain},
         });
         console.log(
           `Registering ${requestType} request route to ${
-            route.constraints ?? domain
+            `${route.constraints}.${domain}` ?? domain
           }${route.path}`
         );
       }
