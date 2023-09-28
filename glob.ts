@@ -41,7 +41,7 @@ export const getDataFolder = (dataFolder: 'avatars') => {
 
 export const getDomain = (sub?: 'avatar' | 'api') => {
   const domain = getEnv(sub ? `${sub.toUpperCase() + '_DOMAIN'}` : 'DOMAIN');
-  if (!domain || z.string().url().parse(domain)) {
+  if (!domain) {
     throw Error(
       `${sub ? `${sub.toUpperCase() + '_DOMAIN'}` : 'DOMAIN'} in .env not set!`
     );
