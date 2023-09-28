@@ -2,7 +2,8 @@ import Database from './usecases/database';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as path from 'path';
-import {z} from 'zod';
+import * as logger from './log/logger';
+import {domainValidator} from './utils/validatorUtils';
 
 const requiredEnvKeys = ['HTTP_PORT', 'MYSQL_HOST', 'MYSQL_DB'];
 let _database: Database;
@@ -27,10 +28,11 @@ export async function database(dbInit?: Database) {
     if (!dbInit) {
       throw Error('Database is not initialized.');
     }
+    logger.info('Connecting to database...');
     _database = dbInit;
     const connected = await _database.connect();
     if (!connected) throw Error('Failed to connect to database!');
-    console.log('Database connection success!');
+    logger.success('Database connection success!');
   }
   return _database.get();
 }
@@ -41,7 +43,7 @@ export const getDataFolder = (dataFolder: 'avatars') => {
 
 export const getDomain = (sub?: 'avatar' | 'api') => {
   const domain = getEnv(sub ? `${sub.toUpperCase() + '_DOMAIN'}` : 'DOMAIN');
-  if (!domain) {
+  if (!domain || !domainValidator.parse(domain)) {
     throw Error(
       `${sub ? `${sub.toUpperCase() + '_DOMAIN'}` : 'DOMAIN'} in .env not set!`
     );

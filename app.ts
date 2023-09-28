@@ -15,6 +15,8 @@ import * as fs from 'fs';
 import fastifyMultipart from '@fastify/multipart';
 import fastifyStatic from '@fastify/static';
 import {loadIP2LocationDB} from './utils/gelocUtils';
+import * as logger from './log/logger';
+import {run} from './setup';
 
 const SERVER = fastify();
 
@@ -26,11 +28,23 @@ const SERVER = fastify();
   });
   const missingKeys = glob.loadEnv();
   if (!missingKeys) {
-    console.log('.env not found, please create one!');
+    // logger.warn('.env not found, please create one!');
+    const setupWizard = await run();
+    if (!setupWizard) return;
+    const commentLine = `# Configuration generated on ${currentTimeString()}`;
+    const envContent = Object.entries(setupWizard)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('\n');
+    const finalEnvContent = `${commentLine}\n${envContent}`;
+    await fs.promises.writeFile(
+      path.join(process.cwd(), '.env'),
+      finalEnvContent
+    );
+    logger.info('.env file created, please rerun to start tazer!');
     return;
   }
   if (missingKeys.length > 0) {
-    console.log(
+    logger.warn(
       `Missing ${
         missingKeys.length <= 1 ? 'EnvKey' : 'EnvKeys'
       }: ${missingKeys.join(', ')}`
@@ -39,8 +53,6 @@ const SERVER = fastify();
   }
 
   await loadIP2LocationDB();
-
-  console.log('Connecting to database...');
 
   await glob.database(
     new Database({
@@ -93,7 +105,7 @@ const SERVER = fastify();
             host: route.constraints ?? domain,
           },
         });
-        console.log(
+        logger.info(
           `Registering ${requestType} request route to ${
             route.constraints ?? domain
           }${route.path}`
@@ -110,10 +122,10 @@ const SERVER = fastify();
         'cf-connecting-ip' in request.headers
           ? request.headers['cf-connecting-ip']
           : request.ip;
-      console.log(
-        `[${currentTimeString()}] ${ip} - ${request.method}@${
-          request.hostname + request.raw.url
-        } | ${processTime}`
+      logger.info(
+        `[${currentTimeString()}] ${reply.statusCode} | ${ip} | ${
+          request.method
+        }@${request.hostname + request.originalUrl} - ${processTime}`
       );
     }
   );
@@ -142,13 +154,13 @@ const SERVER = fastify();
 
   try {
     if (unixPathEnv && process.platform !== 'win32') {
-      console.log('trying to use Unix path ' + unixPathEnv);
+      logger.info('trying to use Unix path ' + unixPathEnv);
       SERVER.listen({path: unixPathEnv});
-      console.log('Using Unix path ' + unixPathEnv);
+      logger.success('Using Unix path ' + unixPathEnv);
     } else {
-      console.log(`Trying to listen on ${host}:${port}...`);
+      logger.info(`Trying to listen on ${host}:${port}...`);
       await SERVER.listen({host, port});
-      console.log(`listening on ${host}:${port}`);
+      logger.success(`listening on ${host}:${port}`);
     }
   } catch (err) {
     console.log(err);
