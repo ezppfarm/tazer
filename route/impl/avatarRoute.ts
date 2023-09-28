@@ -18,17 +18,16 @@ export default class BaseRoute implements routeHandler {
     const pathParams = request.params as Record<string, unknown>;
     const id = pathParams['id'];
     const avatarFolder = getDataFolder('avatars');
-    if (fs.existsSync(path.join(avatarFolder, `${id}.png`))) {
-      const imageBuffer = await fs.promises.readFile(
-        path.join(avatarFolder, `${id}.png`)
-      );
-      const rescaled = await sharp(imageBuffer)
-        .resize(128, 128)
-        .toFormat('jpeg')
-        .toBuffer();
-      return rescaled;
-    }
-    response.code(400);
-    return await fs.promises.readFile(path.join(avatarFolder, '0.png'));
+    const requestedPath = path.join(avatarFolder, `${id}.png`);
+    const exists = fs.existsSync(requestedPath);
+    let imageBuffer = await fs.promises.readFile(
+      path.join(avatarFolder, exists ? `${id}.png` : '0.png')
+    );
+    return await sharp(imageBuffer)
+      .resize(128, 128, {
+        kernel: 'lanczos3',
+      })
+      .toFormat('jpeg')
+      .toBuffer();
   }
 }
