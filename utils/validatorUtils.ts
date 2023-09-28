@@ -44,3 +44,18 @@ export const emailValidator = z
   .email({
     message: 'The provided email is not a valid',
   });
+
+export const domainValidator = z
+  .string({
+    required_error: 'Domain is required',
+    invalid_type_error: 'Domain must be a string',
+  })
+  .refine(
+    value =>
+      /^[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/.test(
+        value
+      ),
+    {
+      message: 'Domain must be a valid one.',
+    }
+  );
