@@ -12,15 +12,7 @@ As mentioned earlier, tazer is currently in development and is not suitable for 
 
 ## Contributing
 
-We welcome contributions to tazer! If you'd like to contribute, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes and commit them with descriptive commit messages.
-4. Push your changes to your fork.
-5. Submit a pull request.
-
-Please note that all contributions should align with our coding standards and guidelines, and they will be reviewed by maintainers.
+We welcome contributions to make tazer even better. If you'd like to contribute, please follow our [contribution guidelines](CONTRIBUTING.md).
 
 ## License
 
