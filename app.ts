@@ -129,7 +129,7 @@ const SERVER = fastify();
 
   SERVER.addHook(
     'onResponse',
-    (request: FastifyRequest, reply: FastifyReply, done) => {
+    (request: FastifyRequest, reply: FastifyReply) => {
       const processTime = prettytime(reply.getResponseTime());
       const ip =
         'cf-connecting-ip' in request.headers
@@ -143,7 +143,7 @@ const SERVER = fastify();
     }
   );
 
-  SERVER.setErrorHandler(function (error, request, reply) {
+  SERVER.setErrorHandler(function (error, _request, reply) {
     if (error instanceof fastify.errorCodes.FST_ERR_BAD_STATUS_CODE) {
       // Log error
       this.log.error(error);
