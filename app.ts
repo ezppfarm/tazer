@@ -90,12 +90,12 @@ const SERVER = fastify();
           url: route.path,
           handler: route.handle,
           constraints: {
-            host: route.constraints ? `${route.constraints}.${domain}` : domain,
+            host: route.constraints ?? domain,
           },
         });
         console.log(
           `Registering ${requestType} request route to ${
-            route.constraints ? `${route.constraints}.${domain}` : domain
+            route.constraints ?? domain
           }${route.path}`
         );
       }
