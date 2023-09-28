@@ -26,7 +26,7 @@ const SERVER = fastify();
     root: path.join(process.cwd(), 'assets'),
     prefix: '/assets/',
   });
-  const missingKeys = glob.loadEnv();
+  let missingKeys = glob.loadEnv();
   if (!missingKeys) {
     // logger.warn('.env not found, please create one!');
     const setupWizard = await run();
@@ -40,10 +40,22 @@ const SERVER = fastify();
       path.join(process.cwd(), '.env'),
       finalEnvContent
     );
-    logger.info('.env file created, please rerun to start tazer!');
-    return;
-  }
-  if (missingKeys.length > 0) {
+
+    missingKeys = glob.loadEnv();
+    if (!missingKeys) {
+      logger.success('failed to create .env file!');
+      return;
+    }
+    logger.success('.env file created!');
+    if (missingKeys.length > 0) {
+      logger.warn(
+        `Missing ${
+          missingKeys.length <= 1 ? 'EnvKey' : 'EnvKeys'
+        }: ${missingKeys.join(', ')}`
+      );
+      return;
+    }
+  } else if (missingKeys.length > 0) {
     logger.warn(
       `Missing ${
         missingKeys.length <= 1 ? 'EnvKey' : 'EnvKeys'
