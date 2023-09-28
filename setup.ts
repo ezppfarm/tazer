@@ -237,7 +237,5 @@ export const run = async (): Promise<undefined | Record<string, string>> => {
     }
   }
 
-  const recordData: Record<string, string> = Object.fromEntries([...settings]);
-
-  return recordData;
+  return Object.fromEntries([...settings]);
 };
