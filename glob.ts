@@ -1,9 +1,9 @@
-import Database from './usecases/database';
+import Database from './app/usecases/database';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as logger from './log/logger';
-import {domainValidator} from './utils/validatorUtils';
+import * as logger from './app/log/logger';
+import {domainValidator} from './app/utils/validatorUtils';
 
 const requiredEnvKeys = ['HTTP_PORT', 'MYSQL_HOST', 'MYSQL_DB'];
 let _database: Database;

@@ -1,4 +1,4 @@
-import {database} from '../glob';
+import {database} from '../../glob';
 import {User} from '../objects/user';
 import {DBUser} from '../types/DBUser';
 import {comparePasswords} from './passwordUtils';

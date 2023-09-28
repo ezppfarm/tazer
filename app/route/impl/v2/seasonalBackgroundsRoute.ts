@@ -1,7 +1,7 @@
 import {FastifyReply, FastifyRequest} from 'fastify';
 import {RequestType} from '../../requestType';
 import routeHandler from '../../routeHandler';
-import * as glob from '../../../glob';
+import * as glob from '../../../../glob';
 
 export default class seasonalBackgroundsRoute implements routeHandler {
   path = '/api/v2/seasonal-backgrounds';

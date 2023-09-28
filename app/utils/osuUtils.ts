@@ -1,5 +1,6 @@
 import {writeFile} from 'fs/promises';
 import {join} from 'path';
+import fetch from 'node-fetch';
 
 export const downloadOSUFile = async (beatmapId: number, dest: string) => {
   const request = await fetch(`https://osu.ppy.sh/osu/${beatmapId}`);

@@ -1,7 +1,7 @@
-import {RequestType} from './route/requestType';
+import {RequestType} from './app/route/requestType';
 import * as glob from './glob';
-import Database from './usecases/database';
-import {currentTimeString, prettytime} from './utils/timeUtils';
+import Database from './app/usecases/database';
+import {currentTimeString, prettytime} from './app/utils/timeUtils';
 import fastify, {
   FastifyError,
   FastifyReply,
@@ -9,13 +9,13 @@ import fastify, {
   HTTPMethods,
 } from 'fastify';
 import {getAllFiles} from '@a73/get-all-files-ts';
-import routeHandler from './route/routeHandler';
+import routeHandler from './app/route/routeHandler';
 import path from 'path';
 import * as fs from 'fs';
 import fastifyMultipart from '@fastify/multipart';
 import fastifyStatic from '@fastify/static';
-import {loadIP2LocationDB} from './utils/gelocUtils';
-import * as logger from './log/logger';
+import {loadIP2LocationDB} from './app/utils/gelocUtils';
+import * as logger from './app/log/logger';
 import {run} from './setup';
 import {check} from 'tcp-port-used';
 
@@ -79,7 +79,7 @@ const SERVER = fastify();
 
   const routes: routeHandler[] = [];
 
-  const routesDir = path.join(process.cwd(), 'route', 'impl');
+  const routesDir = path.join(process.cwd(), 'app', 'route', 'impl');
   const files = await getAllFiles(routesDir).toArray();
   for (const file of files) {
     if (file && file.endsWith('.ts')) {

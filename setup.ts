@@ -1,9 +1,9 @@
 import enquirer from 'enquirer';
 import * as colors from 'ansi-colors';
 import {createSpinner} from 'nanospinner';
-import Database from './usecases/database';
+import Database from './app/usecases/database';
 import {ZodError, z} from 'zod';
-import {domainValidator} from './utils/validatorUtils';
+import {domainValidator} from './app/utils/validatorUtils';
 import {check} from 'tcp-port-used';
 
 export const run = async (): Promise<undefined | Record<string, string>> => {

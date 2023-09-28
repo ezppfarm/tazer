@@ -1,5 +1,5 @@
 import ansiColors from 'ansi-colors';
-import * as glob from '../glob';
+import * as glob from '../../glob';
 
 export function debug(message: string) {
   const isDebug = glob.getEnv('DEVELOPER_MODE', 'false') === 'true';
