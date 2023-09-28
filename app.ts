@@ -110,7 +110,6 @@ const SERVER = fastify();
         'cf-connecting-ip' in request.headers
           ? request.headers['cf-connecting-ip']
           : request.ip;
-      console.log(request.hostname);
       console.log(
         `[${currentTimeString()}] ${ip} - ${request.method}@${
           request.hostname + request.raw.url
