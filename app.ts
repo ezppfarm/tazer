@@ -17,6 +17,7 @@ import fastifyStatic from '@fastify/static';
 import {loadIP2LocationDB} from './utils/gelocUtils';
 import * as logger from './log/logger';
 import {run} from './setup';
+import {check} from 'tcp-port-used';
 
 const SERVER = fastify();
 
@@ -171,6 +172,9 @@ const SERVER = fastify();
       logger.success('Using Unix path ' + unixPathEnv);
     } else {
       logger.info(`Trying to listen on ${host}:${port}...`);
+      const isPortUsed = await check(port, host);
+      if (isPortUsed)
+        throw Error(`Port ${port} is already used by another application!`);
       await SERVER.listen({host, port});
       logger.success(`listening on ${host}:${port}`);
     }
