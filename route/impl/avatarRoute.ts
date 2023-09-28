@@ -20,7 +20,7 @@ export default class BaseRoute implements routeHandler {
     const avatarFolder = getDataFolder('avatars');
     const requestedPath = path.join(avatarFolder, `${id}.png`);
     const exists = fs.existsSync(requestedPath);
-    let imageBuffer = await fs.promises.readFile(
+    const imageBuffer = await fs.promises.readFile(
       path.join(avatarFolder, exists ? `${id}.png` : '0.png')
     );
     return await sharp(imageBuffer)
