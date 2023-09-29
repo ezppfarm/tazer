@@ -135,7 +135,8 @@ const SERVER = fastify();
           ? request.headers['cf-connecting-ip']
           : request.ip;
 
-      if (!request.originalUrl.endsWith('negotiateVersion=1')) //Ignore websocket requests for now
+      //Ignore websocket requests for now
+      if (!request.originalUrl.endsWith('negotiateVersion=1'))
         logger.info(
           `[${currentTimeString()}] ${reply.statusCode} | ${ip} | ${
             request.method
