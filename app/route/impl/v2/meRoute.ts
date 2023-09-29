@@ -16,13 +16,16 @@ export default class meRoute implements routeHandler {
     const authorization_token = request.headers.authorization?.split(' ')[1];
 
     if (!authorization_token)
-      return {
-        Authorization: 'Basic',
-      };
+      return response.code(401).send({
+        authentication: 'basic',
+      });
 
     const session = SESSIONS.get<Session>(authorization_token);
 
-    if (!session) return {};
+    if (!session)
+      return response.code(401).send({
+        authentication: 'basic',
+      });
 
     const user = await getUser(session.id);
 
