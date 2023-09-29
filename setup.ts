@@ -1,5 +1,5 @@
 import enquirer from 'enquirer';
-import * as colors from 'ansi-colors';
+import chalk from 'chalk';
 import {createSpinner} from 'nanospinner';
 import Database from './app/usecases/database';
 import {ZodError, z} from 'zod';
@@ -18,11 +18,11 @@ export const run = async (): Promise<undefined | Record<string, string>> => {
   };
 
   const licensePrompt: Record<string, string> = await enquirer.prompt({
-    prefix: colors.bold.red('⚠'),
+    prefix: chalk.bold.red('⚠'),
     type: 'select',
     name: 'confirm',
     align: 'left',
-    message: colors.italic
+    message: chalk.italic
       .gray(`  We sincerely appreciate your support and trust in tazer. Before you can proceed to use this
     software, we kindly ask you to accept the terms and conditions of the Mozilla Public License,
     Version 2.0 (MPL-2.0). The MPL-2.0 License is designed to protect both your rights and the rights
@@ -32,14 +32,14 @@ export const run = async (): Promise<undefined | Record<string, string>> => {
     reason, you do not wish to accept the terms of the MPL-2.0 License, please choose "I do not accept"
     to exit the installation process. Your decision will determine whether you can proceed with the
     installation and use of tazer.\n
-  ${colors.cyan.bold('Thank you for your understanding and support!')}`),
+  ${chalk.cyan.bold('Thank you for your understanding and support!')}`),
     choices: [
       {
-        message: colors.bold.redBright('I do not accept'),
+        message: chalk.bold.redBright('I do not accept'),
         name: 'I do not accept',
       },
       {
-        message: colors.bold.green('I accept'),
+        message: chalk.bold.green('I accept'),
         name: 'I accept',
       },
     ],

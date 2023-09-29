@@ -1,20 +1,19 @@
-import ansiColors from 'ansi-colors';
+import chalk from 'chalk';
 import * as glob from '../../glob';
 
 export function debug(message: string) {
   const isDebug = glob.getEnv('DEVELOPER_MODE', 'false') === 'true';
-  if (isDebug)
-    console.log(ansiColors.bold.cyan('✎') + ' ' + ansiColors.bold(message));
+  if (isDebug) console.log(chalk.bold.cyan('✎') + ' ' + chalk.bold(message));
 }
 export function info(message: string) {
-  console.log(ansiColors.bold.blue('🛈') + ' ' + ansiColors.bold(message));
+  console.log(chalk.bold.blue('🛈') + ' ' + chalk.bold(message));
 }
 export function warn(message: string) {
-  console.log(ansiColors.bold.yellow('⚠') + ' ' + ansiColors.bold(message));
+  console.log(chalk.bold.yellow('⚠') + ' ' + chalk.bold(message));
 }
 export function error(message: string) {
-  console.log(ansiColors.red.red('✖') + ' ' + ansiColors.bold(message));
+  console.log(chalk.red.red('✖') + ' ' + chalk.bold(message));
 }
 export function success(message: string) {
-  console.log(ansiColors.green('✔') + ' ' + ansiColors.bold(message));
+  console.log(chalk.green('✔') + ' ' + chalk.bold(message));
 }
