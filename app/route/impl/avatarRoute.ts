@@ -16,7 +16,7 @@ export default class BaseRoute implements routeHandler {
     response.type('image/png');
     const pathParams = request.params as Record<string, unknown>;
     const id = pathParams['id'];
-    const avatarFolder = glob.getDataFolder('avatars');
+    const avatarFolder = await glob.getDataFolder('avatars');
     const requestedPath = path.join(avatarFolder, `${id}.png`);
     const exists = fs.existsSync(requestedPath);
     const imageBuffer = await fs.promises.readFile(
