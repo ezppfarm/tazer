@@ -37,8 +37,12 @@ export async function database(dbInit?: Database) {
   return _database.get();
 }
 
-export const getDataFolder = (dataFolder: 'avatars') => {
-  return path.join(process.cwd(), '.data', dataFolder);
+export const getDataFolder = async (dataFolder: 'avatars' | 'osu') => {
+  const dataRoot = path.join(process.cwd(), '.data');
+  if (!fs.existsSync(dataRoot)) await fs.promises.mkdir(dataRoot);
+  const dataPath = path.join(dataRoot, dataFolder);
+  if (!fs.existsSync(dataPath)) await fs.promises.mkdir(dataPath);
+  return dataPath;
 };
 
 export const getDomain = (sub?: 'avatar') => {
