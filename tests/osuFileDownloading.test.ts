@@ -4,7 +4,7 @@ import * as path from 'path';
 import {promises} from 'fs';
 import assert from 'assert';
 
-test('test osu file downloading', async t => {
+test('test osu file downloading', async () => {
   const result = await downloadOSUFile(75, path.join(process.cwd()));
   assert(result, 'download result is undefined');
   const content = await promises.readFile(result, {encoding: 'utf-8'});
