@@ -6,7 +6,7 @@ export default class scoresRoute implements routeHandler {
   path = '/api/v2/beatmaps/:bid/solo-scores';
   requestTypes = [RequestType.GET];
   async handle(
-    request: FastifyRequest,
+    _request: FastifyRequest,
     response: FastifyReply
   ): Promise<unknown> {
     response.type('application/json');

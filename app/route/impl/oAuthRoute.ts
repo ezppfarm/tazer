@@ -2,11 +2,14 @@ import {FastifyReply, FastifyRequest} from 'fastify';
 import {RequestType} from '../requestType';
 import routeHandler from '../routeHandler';
 import {authenticateUser, toSafeUsername} from '../../utils/userUtils';
-import {REFRESH_TOKENS, SESSIONS} from '../../repositories/session';
 import {Session} from '../../objects/session';
 import {generateBearerToken} from '../../utils/stringUtils';
 import {UserLoginStruct} from '../../types/UserLoginStruct';
 import * as responseUtils from '../../utils/responseUtils';
+import {
+  getSessionTokenFromRefreshToken,
+  insertSessionToken,
+} from '../../repositories/session';
 
 export default class oAuthRoute implements routeHandler {
   path = '/oauth/token';
@@ -24,11 +27,11 @@ export default class oAuthRoute implements routeHandler {
     const refresh_token = loginRequest.refresh_token?.value;
 
     if (refresh_token) {
-      const session = REFRESH_TOKENS.get<Session>(refresh_token);
+      const session = getSessionTokenFromRefreshToken(refresh_token);
       if (session) {
         session.expires_in = 86400;
         session.access_token = generateBearerToken();
-        SESSIONS.set(session.access_token, session, 86400);
+        insertSessionToken(session);
         return session;
       } else
         return responseUtils.grant_error(response, 'Invalid refresh token');
@@ -66,8 +69,7 @@ export default class oAuthRoute implements routeHandler {
       id: auth.id,
       username: auth.username,
     };
-    SESSIONS.set(session.access_token, session, 86400);
-    REFRESH_TOKENS.set(session.refresh_token, session);
+    insertSessionToken(session);
     return responseUtils.success(response, session);
   }
 }
