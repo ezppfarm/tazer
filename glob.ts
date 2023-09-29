@@ -5,7 +5,7 @@ import * as path from 'path';
 import * as logger from './app/log/logger';
 import {domainValidator} from './app/utils/validatorUtils';
 
-const requiredEnvKeys = ['HTTP_PORT', 'MYSQL_HOST', 'MYSQL_DB'];
+const REQUIRED_ENV_KEYS = ['HTTP_PORT', 'MYSQL_HOST', 'MYSQL_DB'];
 let _database: Database;
 
 export function loadEnv() {
@@ -13,7 +13,7 @@ export function loadEnv() {
   if (!fs.existsSync(envFile)) return undefined;
   const missingEnvKeys: string[] = [];
   dotenv.config();
-  for (const envKey of requiredEnvKeys) {
+  for (const envKey of REQUIRED_ENV_KEYS) {
     if (!getEnv(envKey)) missingEnvKeys.push(envKey);
   }
   return missingEnvKeys;
@@ -41,7 +41,7 @@ export const getDataFolder = (dataFolder: 'avatars') => {
   return path.join(process.cwd(), '.data', dataFolder);
 };
 
-export const getDomain = (sub?: 'avatar' | 'api') => {
+export const getDomain = (sub?: 'avatar') => {
   const domain = getEnv(sub ? `${sub.toUpperCase() + '_DOMAIN'}` : 'DOMAIN');
   if (!domain || !domainValidator.parse(domain)) {
     throw Error(
