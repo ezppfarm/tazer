@@ -8,8 +8,8 @@
     "debug": "tsx ./app.ts",
     "depcheck": "depcheck .",
     "lint": "gts lint",
-    "clean": "gts clean",
     "fix": "gts fix",
+    "prepare": "npm run lint && npm run fix",
     "posttest": "npm run lint"
   },
   "keywords": [],
