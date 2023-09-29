@@ -7,10 +7,10 @@
   "scripts": {
     "debug": "tsx ./app.ts",
     "depcheck": "depcheck .",
+    "test": "tsx tests.ts",
     "lint": "gts lint",
     "fix": "gts fix",
-    "prepare": "npm run lint && npm run fix",
-    "posttest": "npm run lint"
+    "prepare": "npm run lint && npm run fix"
   },
   "keywords": [],
   "author": "HorizonCode",
