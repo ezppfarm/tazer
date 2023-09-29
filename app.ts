@@ -134,11 +134,13 @@ const SERVER = fastify();
         'cf-connecting-ip' in request.headers
           ? request.headers['cf-connecting-ip']
           : request.ip;
-      logger.info(
-        `[${currentTimeString()}] ${reply.statusCode} | ${ip} | ${
-          request.method
-        }@${request.hostname + request.originalUrl} - ${processTime}`
-      );
+
+      if (!request.originalUrl.endsWith('negotiateVersion=1')) //Ignore websocket requests for now
+        logger.info(
+          `[${currentTimeString()}] ${reply.statusCode} | ${ip} | ${
+            request.method
+          }@${request.hostname + request.originalUrl} - ${processTime}`
+        );
     }
   );
 
