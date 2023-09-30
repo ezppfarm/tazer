@@ -10,9 +10,17 @@ osu!lazer Bancho is the backend server responsible for handling multiplayer game
 
 As mentioned earlier, tazer is currently in development and is not suitable for use. We recommend that you do not attempt to run it at this stage.
 
+## Project Status
+
+**Important Note:** This project is currently maintained by a single individual, and progress may be slower than desired due to resource limitations. We're committed to delivering quality software, but please understand that this may mean slower development and response times to issues and pull requests.
+
 ## Contributing
 
 We welcome contributions to make tazer even better. If you'd like to contribute, please follow our [contribution guidelines](CONTRIBUTING.md).
+
+## Financial Support
+
+If you or your organization would like to provide financial support for this project, please visit our [sponsorship page](https://ko-fi.com/ezppfarm) for more information on how to contribute.
 
 ## License
 
